@@ -1,0 +1,98 @@
+{
+	"patcher" : 	{
+		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 8,
+			"minor" : 5,
+			"revision" : 0,
+			"architecture" : "x64",
+			"modernui" : 1
+		}
+,
+		"classnamespace" : "dsp.gen",
+		"rect" : [ 520.0, 93.0, 486.0, 666.0 ],
+		"bglocked" : 0,
+		"openinpresentation" : 0,
+		"default_fontsize" : 12.0,
+		"default_fontface" : 0,
+		"default_fontname" : "Arial",
+		"gridonopen" : 1,
+		"gridsize" : [ 15.0, 15.0 ],
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
+		"statusbarvisible" : 2,
+		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
+		"boxanimatetime" : 200,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "",
+		"assistshowspatchername" : 0,
+		"boxes" : [ 			{
+				"box" : 				{
+					"code" : "// A 5th order elliptic low pass filter\r\n// cutoff at samplerate/4\r\n// stop-band at -72db or less\r\n// pass band with <0.01db ripple\r\n\r\nHistory x0, x1, x2, x3, x4, x5;\nHistory y0, y1, y2, y3, y4, y5;\n// coefficients:\ngain = 0.04787547299512256;\na0 = 1;\na1 = -0.5061232243813019;\na2 = 0.9905784411856455;\na3 = -0.3745912508799133;\na4 = 0.19679966897246692;\na5 = -0.03164104271901255;\nb0 = 1;\nb1 = 4.303658696339824;\nb2 = 8.0123725866073;\nb3 = 8.0123725866073;\nb4 = 4.303658696339824;\nb5 = 1;\n// cascade:\nx5 = x4;\nx4 = x3;\nx3 = x2;\nx2 = x1;\nx1 = x0;\ny5 = y4;\ny4 = y3;\ny3 = y2;\ny2 = y1;\ny1 = y0;\n// kernel:\nx0 = in1 * gain;\ny0 = x0*b0 + x1*b1 + x2*b2 + x3*b3 + x4*b4 + x5*b5\n           - y1*a1 - y2*a2 - y3*a3 - y4*a4 - y5*a5;\nout1 = y0;\n",
+					"fontface" : 0,
+					"fontname" : "<Monospaced>",
+					"fontsize" : 12.0,
+					"id" : "obj-17",
+					"maxclass" : "codebox",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 11.0, 33.0, 447.0, 589.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-18",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 11.0, 9.0, 28.0, 22.0 ],
+					"text" : "in 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-19",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 11.0, 631.0, 35.0, 22.0 ],
+					"text" : "out 1"
+				}
+
+			}
+ ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-19", 0 ],
+					"source" : [ "obj-17", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-17", 0 ],
+					"source" : [ "obj-18", 0 ]
+				}
+
+			}
+ ],
+		"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ]
+	}
+
+}

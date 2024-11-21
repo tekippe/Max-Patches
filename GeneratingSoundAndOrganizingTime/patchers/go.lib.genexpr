@@ -1,0 +1,151 @@
+
+// n=0: triangle
+// n=13: curves to points up and down
+// n=44: double-curved
+// over 15: overshoots -1,1... maybe clip or fold?
+cubic(p, u) {
+	n = max(u*45, 0);
+	return interp(p, -n, 0, 1, n+1, mode="cubic");
+}
+// n=0: triangle
+// n=5: curves to points up and down
+// n=15: double-curved
+// over 15: overshoots -1,1... maybe clip or fold?
+spline(p, u) {
+	n = max(u*15, 0);
+	return interp(p, -n, 0, 1, n+1, mode="spline");
+}
+
+// like overdrive~:	
+// n=1 triangle
+// n near zero is curved spike up
+// n large is curved spike down
+overdrive(x, shape) {
+	// shape:
+	y = 1-exp((shape) * log(1-x));
+	// hard limit:
+	return clip(y, 0, 1);
+}
+
+// linear in the middle, tanh-shaped outside
+softknee(p, u) {
+	//u = sqrt(u);
+	v = 1-u;
+	x = p; //scale(p, 0, 1, -1, 1); // bipolarize
+	lin = clip(x, 0, v); // linear part
+	non = (x-lin)/u; 		 // nonlinear part
+	// shape it:
+	non = sin(non * pow(halfpi, non));
+	return lin + non*u;
+}
+
+pulse(p, u) {
+	u = clip(u, 0, 0.999999);
+	pulse = floor(1/(1-u)) - 0.5;
+	return p*pow(sin(p*pulse * pi),2);
+}
+
+// b -1: triangle
+// b  0: sine like
+// b +1: square
+// u 0: one step
+// u 0.5: two steps
+// u 0.67: three steps
+// u 1.0: huge number of tiny steps
+quantize(p, b, u) {
+	u = clip(u, 0, 0.999999);
+	b = clip(b, -1, 0.999999);
+		
+	sharp = 2/(1-b)-1;
+	
+	n = floor(1/(1-u));  // max(0.5, 1/(1-u)); for smooth ranges
+	
+	q = p*n; // + bias;
+
+	r = round(q);	
+	m = mix(r, q, pow(absdiff(r, q)*2, sharp*sharp));
+	
+	return m / n;
+}
+
+unitBlackman(p) {
+	r = pi * p;
+	return 0.42 - 0.5*cos(r) + 0.08*cos(2*r);
+}
+unitBlackmanHarris(p) {
+	r = pi * p;
+	return 0.35875 -0.48829*cos(r)
+		+0.14128*cos(2*r) -0.01168*cos(3*r);
+}
+unitBlackmanNutall(p) {
+	r = pi * p;
+	return 0.3635819 -0.4891775*cos(r)
+		+0.1365995*cos(2*r) -0.0106411*cos(3*r);
+}
+
+unitFlatTop(p) {
+	r = pi * p;
+ 	return 0.21557895 -0.41663158*cos(r)
+		+0.277263158*cos(2*r) -0.083578947*cos(3*r)
+		+0.006947368*cos(4*r);
+}
+
+// note: does not quite hit zero
+unitHamming(p) { 
+	return 0.53836-0.46164*cos(pi*p); 
+}
+
+
+unitNutall(p) {
+	r = pi * p;
+	return 0.355768 -0.487396*cos(r)
+		+0.144323*cos(2*r) -0.012604*cos(3*r);
+}
+
+	
+unitHann(p) { 
+	return 0.5 -0.5*cos(pi*p); 
+}
+
+
+/////////////////////////////
+
+// basically trapezoid into sine
+// u = 1  sine
+unitTukey(p, u) {
+	return p > u ? 1 : p <= 0 ? 0 : 0.5*(1-cos(pi*p/u));
+}
+
+// similar to tukey but a bit sharper-cornered
+unitPlanckTaper(p, u) {
+	return p > u ? 1 : p <= 0 ? 0 : 1/(1+exp(u/p - u/(u-p)));
+}
+
+////////////////////////////////
+
+
+// if u < 0.5 the function might not reach zero
+unitGauss(p, u) { 
+	u = 1/(1-clip(u, 0, 0.999999));  // 1 to inf
+	return exp(-0.5*pow(2*u*(p-1),2)); 
+}
+// raise gaussian to power >= 1
+// approaches square as power -> inf
+// if u < 0.5 and power == 1, the function might not reach zero
+unitGaussGeneralized(p, u, power) { 
+	u = 1/(1-clip(u, 0, 0.999999));  // 1 to inf
+	power = floor(power);
+	return exp(-0.5*pow(2*u*(p-1),2*power)); 
+}
+
+unitWelch(p) {
+	x = p - 1;
+	return 1 - x*x;
+}
+
+unitParzen(p) {
+	return p > 1 ? 1
+		 : p > 0.5 ? 1 - 6*pow(1-p,2)*p 
+		 : p > 0 ? 2 * pow(p, 3)
+		 : 0;
+} 

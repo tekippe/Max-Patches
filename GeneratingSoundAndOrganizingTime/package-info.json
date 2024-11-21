@@ -1,0 +1,24 @@
+{
+	"author" : "Graham Wakefield and Gregory Taylor",
+	"description" : "Patchers and abstractions provided with the book `Generating Sound & Organizing Time",
+	"displayname" : "",
+	"extends" : "",
+	"extensible" : 1,
+	"homepatcher" : "",
+	"name" : "go",
+	"os" : 	{
+		"macintosh" : 		{
+			"platform" : [ "ia32", "x64" ],
+			"min_version" : "none"
+		},
+		"windows" : 		{
+			"platform" : [ "ia32", "x64" ],
+			"min_version" : "none"
+		}
+	},
+	"package_extra" : 	{},
+	"readme": "README.txt",
+	"tags" : [ "gen~", "DSP" ],
+	"version" : "1.0.0",
+	"website" : "https://cycling74.com"
+}
