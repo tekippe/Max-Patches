@@ -15,6 +15,20 @@
 		"gridsize" : [ 15.0, 15.0 ],
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 12.0, 88.0, 118.0, 118.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 12.0, 89.0, 118.0, 118.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-15",
 					"maxclass" : "dropfile",
 					"numinlets" : 1,
@@ -140,12 +154,19 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 32.5, 42.5, 668.0, 209.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 111.0, 83.0, 694.0, 132.0 ]
+					"presentation_rect" : [ 5.0, 83.0, 800.0, 131.0 ]
 				}
 
 			}
  ],
 		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-10", 0 ],
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
 				"patchline" : 				{
 					"destination" : [ "obj-9", 0 ],
 					"source" : [ "obj-10", 0 ]
